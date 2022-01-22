@@ -1,5 +1,5 @@
 import org.scalatest.funsuite.AnyFunSuite
-import character.Character
+import character.{Character, Party}
 
 class char_test extends AnyFunSuite {
   test("Testing initial val") {
@@ -12,10 +12,10 @@ class char_test extends AnyFunSuite {
     assert(dmg1.current_hp == 100)
     dmg1.take_physical_damage(40)
     assert(dmg1.current_hp == 60)
-    assert(dmg1.alive == true)
+    assert(dmg1.alive)
     dmg1.take_physical_damage(90)
     assert(dmg1.current_hp == 0)
-    assert(dmg1.alive == false)
+    assert(!dmg1.alive)
 
   }
 
@@ -43,5 +43,54 @@ class char_test extends AnyFunSuite {
     char1.magic_attack(char2, 100)
     assert(char2.current_hp == 82)
     assert(char1.current_magic == 90)
+  }
+
+  test("gain exp character"){
+    val char1: Character = new Character()
+    val char2: Character = new Character()
+    assert(char1.lvl == 1)
+    assert(char1.exp == 0)
+    assert(char1.lvl_up_exp == 100)
+    char1.gain_exp(char1.gained_exp(char2))
+    assert(char1.exp == 10)
+    char2.lvl = 4
+    char1.gain_exp(char1.gained_exp(char2))
+    char1.lvl_up()
+    assert(char1.exp == 70)
+    assert(char1.lvl == 2)
+    assert(char1.lvl_up_exp == 150)
+    char2.lvl = 12
+    char1.gain_exp(char1.gained_exp(char2))
+    char1.lvl_up()
+    assert(char1.lvl == 6)
+    assert(char1.lvl_up_exp == 757)
+  }
+
+  test("party test"){
+    val win_party: Party = new Party()
+    val char1: Character = new Character()
+    val char2: Character = new Character()
+    val char3: Character = new Character()
+    win_party.add_party_member(char1)
+    win_party.add_party_member(char2)
+    win_party.add_party_member(char3)
+    val char4: Character = new Character()
+    val char5: Character = new Character()
+    val char6: Character = new Character()
+    val defeat_party: Party = new Party()
+    defeat_party.add_party_member(char4)
+    defeat_party.add_party_member(char5)
+    defeat_party.add_party_member(char6)
+    win_party.fight_win(defeat_party)
+    assert(win_party.char_list(0).exp == 10)
+    win_party.char_list(0).alive = false
+    win_party.fight_win(defeat_party)
+    assert(win_party.char_list(0).exp == 10)
+    assert(win_party.char_list(1).exp == 25)
+    defeat_party.char_list(0).lvl = 4
+    assert(defeat_party.char_list(0).lvl == 4)
+    win_party.fight_win(defeat_party)
+    assert(win_party.char_list(1).lvl == 2)
+    assert(win_party.char_list(1).exp == 15)
   }
 }

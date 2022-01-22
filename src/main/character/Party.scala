@@ -1,0 +1,38 @@
+package character
+
+import scala.collection.mutable.ListBuffer
+
+class Party{
+  var char_list: ListBuffer[Character] = ListBuffer(
+  )
+
+  def add_party_member(character: Character): Unit = {
+    if (char_list.length <= 4) {
+      char_list += character
+    }
+  }
+
+  def fight_win(opponent: Party): Unit = {
+    var exp_from_battle: Int = 0
+    var distributed_exp: Int = 0
+    for (enemy_member <- opponent.char_list.indices) {
+      exp_from_battle += this.char_list(enemy_member).gained_exp(opponent.char_list(enemy_member))
+    }
+    var alive_members: Int = 0
+    for (member <- this.char_list.indices) {
+      if (this.char_list(member).alive) {
+        alive_members += 1
+      }
+    }
+    distributed_exp = exp_from_battle/alive_members
+    for (member <- this.char_list.indices) {
+      if (this.char_list(member).alive) {
+        this.char_list(member).gain_exp(distributed_exp)
+        if (this.char_list(member).lvl_up_exp < this.char_list(member).exp) {
+          this.char_list(member).lvl_up()
+        }
+      }
+    }
+
+  }
+}

@@ -9,7 +9,10 @@ class Character {
   var armor: Int = 3
   var magic_def: Int = 9
   var magic_power: Int = 20
-  var alive = true
+  var alive: Boolean = true
+  var exp: Int = 0
+  var lvl: Int = 1
+  var lvl_up_exp: Int = 100
 
   def take_physical_damage(dmg: Int): Unit = {
     if (dmg > this.armor) {
@@ -47,6 +50,24 @@ class Character {
   def magic_attack(opponent: Character, consumption: Int): Unit = {
     if (use_magic(consumption)) {
       opponent.take_magical_damage(this.magic_power)
+    }
+  }
+
+  def gained_exp(opponent: Character): Int = {
+    var exp: Int = 0
+    exp += opponent.lvl * opponent.lvl * 10
+    exp
+  }
+
+  def gain_exp(experience: Int): Unit = {
+    this.exp += experience
+  }
+
+  def lvl_up(): Unit = {
+    while (this.lvl_up_exp < this.exp) {
+      this.exp -= this.lvl_up_exp
+      this.lvl += 1
+      this.lvl_up_exp = (this.lvl_up_exp * 1.5).toInt
     }
   }
 }
