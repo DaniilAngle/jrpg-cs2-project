@@ -49,7 +49,7 @@ class Character {
 
   def magic_attack(opponent: Character, consumption: Int): Unit = {
     if (use_magic(consumption)) {
-      opponent.take_magical_damage(this.magic_power)
+      opponent.take_magical_damage(this.magic_power+consumption)
     }
   }
 
@@ -66,8 +66,16 @@ class Character {
   def lvl_up(): Unit = {
     while (this.lvl_up_exp < this.exp) {
       this.exp -= this.lvl_up_exp
-      this.lvl += 1
       this.lvl_up_exp = (this.lvl_up_exp * 1.5).toInt
+      this.hp += 10 * this.lvl
+      this.magic += 2 * this.lvl
+      this.current_hp = this.hp
+      this.current_magic = this.magic
+      this.armor += this.lvl
+      this.attack_power += this.lvl
+      this.magic_power += this.lvl
+      this.magic_def += this.lvl
+      this.lvl += 1
     }
   }
 }

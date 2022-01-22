@@ -39,9 +39,9 @@ class char_test extends AnyFunSuite {
     assert(char2.current_hp == 93)
     char1.magic_attack(char2, 10)
     assert(char1.current_magic == 90)
-    assert(char2.current_hp == 82)
+    assert(char2.current_hp == 72)
     char1.magic_attack(char2, 100)
-    assert(char2.current_hp == 82)
+    assert(char2.current_hp == 72)
     assert(char1.current_magic == 90)
   }
 
@@ -54,16 +54,22 @@ class char_test extends AnyFunSuite {
     char1.gain_exp(char1.gained_exp(char2))
     assert(char1.exp == 10)
     char2.lvl = 4
+    char1.take_physical_damage(20)
+    assert(char1.current_hp == 83)
     char1.gain_exp(char1.gained_exp(char2))
     char1.lvl_up()
     assert(char1.exp == 70)
     assert(char1.lvl == 2)
+    assert(char1.armor == 4)
+    assert(char1.current_hp == 110)
+    assert(char1.hp == 110)
     assert(char1.lvl_up_exp == 150)
     char2.lvl = 12
     char1.gain_exp(char1.gained_exp(char2))
     char1.lvl_up()
     assert(char1.lvl == 6)
     assert(char1.lvl_up_exp == 757)
+    assert(char1.current_hp == 130)
   }
 
   test("party test"){
