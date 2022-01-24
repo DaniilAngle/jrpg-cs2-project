@@ -114,4 +114,28 @@ class char_test extends AnyFunSuite {
     party.add_party_member(char5)
     assert(party.char_list.length == 4)
   }
+
+  test("party death test") {
+    val win_party: Party = new Party()
+    val defeat_party: Party = new Party()
+    val char1: Character = new Character()
+    val char2: Character = new Character()
+    val char3: Character = new Character()
+    val char4: Character = new Character()
+    val char5: Character = new Character()
+    val char6: Character = new Character()
+    win_party.add_party_member(char1)
+    win_party.add_party_member(char2)
+    win_party.add_party_member(char3)
+    defeat_party.add_party_member(char4)
+    defeat_party.add_party_member(char5)
+    defeat_party.add_party_member(char6)
+    defeat_party.char_list(0).alive = false
+    defeat_party.char_list(1).alive = false
+    win_party.battle_end(defeat_party)
+    assert(win_party.char_list(0).exp == 0)
+    defeat_party.char_list(2).alive = false
+    win_party.battle_end(defeat_party)
+    assert(win_party.char_list(0).exp == 10)
+  }
 }
