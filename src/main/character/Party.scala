@@ -2,9 +2,11 @@ package character
 
 import scala.collection.mutable.ListBuffer
 
-class Party{
+class Party(main_char: Character){
   var char_list: ListBuffer[Character] = ListBuffer(
+    main_char
   )
+
 
   def add_party_member(character: Character): Unit = {
     if (char_list.length < 4) {

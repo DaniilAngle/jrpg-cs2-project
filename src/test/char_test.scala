@@ -69,22 +69,20 @@ class char_test extends AnyFunSuite {
     char1.lvl_up()
     assert(char1.lvl == 6)
     assert(char1.lvl_up_exp == 757)
-    assert(char1.current_hp == 130)
+    assert(char1.current_hp == 250)
   }
 
   test("party test"){
-    val win_party: Party = new Party()
     val char1: Character = new Character()
     val char2: Character = new Character()
     val char3: Character = new Character()
-    win_party.add_party_member(char1)
+    val win_party: Party = new Party(char1)
     win_party.add_party_member(char2)
     win_party.add_party_member(char3)
     val char4: Character = new Character()
     val char5: Character = new Character()
     val char6: Character = new Character()
-    val defeat_party: Party = new Party()
-    defeat_party.add_party_member(char4)
+    val defeat_party: Party = new Party(char4)
     defeat_party.add_party_member(char5)
     defeat_party.add_party_member(char6)
     win_party.fight_win(defeat_party)
@@ -101,13 +99,12 @@ class char_test extends AnyFunSuite {
   }
 
   test("party size test") {
-    val party: Party = new Party()
     val char1: Character = new Character()
     val char2: Character = new Character()
     val char3: Character = new Character()
     val char4: Character = new Character()
     val char5: Character = new Character()
-    party.add_party_member(char1)
+    val party: Party = new Party(char1)
     party.add_party_member(char2)
     party.add_party_member(char3)
     party.add_party_member(char4)
@@ -116,18 +113,16 @@ class char_test extends AnyFunSuite {
   }
 
   test("party death test") {
-    val win_party: Party = new Party()
-    val defeat_party: Party = new Party()
     val char1: Character = new Character()
+    val char4: Character = new Character()
+    val win_party: Party = new Party(char1)
+    val defeat_party: Party = new Party(char4)
     val char2: Character = new Character()
     val char3: Character = new Character()
-    val char4: Character = new Character()
     val char5: Character = new Character()
     val char6: Character = new Character()
-    win_party.add_party_member(char1)
     win_party.add_party_member(char2)
     win_party.add_party_member(char3)
-    defeat_party.add_party_member(char4)
     defeat_party.add_party_member(char5)
     defeat_party.add_party_member(char6)
     defeat_party.char_list(0).alive = false
