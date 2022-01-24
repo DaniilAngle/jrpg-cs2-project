@@ -7,8 +7,20 @@ class Party{
   )
 
   def add_party_member(character: Character): Unit = {
-    if (char_list.length <= 4) {
+    if (char_list.length < 4) {
       char_list += character
+    }
+  }
+
+  def battle_end(opponent: Party): Unit = {
+    var dead_counter: Int = 0
+    for (opponent_member <- opponent.char_list.indices) {
+      if (!opponent.char_list(opponent_member).alive) {
+        dead_counter += 1
+      }
+    }
+    if (dead_counter == opponent.char_list.length) {
+      fight_win(opponent)
     }
   }
 

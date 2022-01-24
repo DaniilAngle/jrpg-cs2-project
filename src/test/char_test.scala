@@ -11,7 +11,7 @@ class char_test extends AnyFunSuite {
     val dmg1: Character = new Character()
     assert(dmg1.current_hp == 100)
     dmg1.take_physical_damage(40)
-    assert(dmg1.current_hp == 60)
+    assert(dmg1.current_hp == 63)
     assert(dmg1.alive)
     dmg1.take_physical_damage(90)
     assert(dmg1.current_hp == 0)
@@ -98,5 +98,20 @@ class char_test extends AnyFunSuite {
     win_party.fight_win(defeat_party)
     assert(win_party.char_list(1).lvl == 2)
     assert(win_party.char_list(1).exp == 15)
+  }
+
+  test("party size test") {
+    val party: Party = new Party()
+    val char1: Character = new Character()
+    val char2: Character = new Character()
+    val char3: Character = new Character()
+    val char4: Character = new Character()
+    val char5: Character = new Character()
+    party.add_party_member(char1)
+    party.add_party_member(char2)
+    party.add_party_member(char3)
+    party.add_party_member(char4)
+    party.add_party_member(char5)
+    assert(party.char_list.length == 4)
   }
 }
