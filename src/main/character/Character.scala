@@ -55,19 +55,22 @@ class Character {
 
   def gained_exp(opponent: Character): Int = {
     var exp: Int = 0
-    exp += opponent.lvl * opponent.lvl * 10
+    exp += opponent.lvl * 20 + 23
     exp
   }
 
   def gain_exp(experience: Int): Unit = {
     this.exp += experience
+    if (this.exp >= this.lvl_up_exp) {
+      this.lvl_up()
+    }
   }
 
   def lvl_up(): Unit = {
     while (this.lvl_up_exp < this.exp) {
       this.exp -= this.lvl_up_exp
-      this.lvl_up_exp = (this.lvl_up_exp * 1.5).toInt
-      this.hp += 10 * this.lvl
+      this.lvl_up_exp += 40 * this.lvl
+      this.hp += 5 * this.lvl
       this.magic += 2 * this.lvl
       this.current_hp = this.hp
       this.current_magic = this.magic

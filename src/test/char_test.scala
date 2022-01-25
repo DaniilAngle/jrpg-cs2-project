@@ -52,24 +52,22 @@ class char_test extends AnyFunSuite {
     assert(char1.exp == 0)
     assert(char1.lvl_up_exp == 100)
     char1.gain_exp(char1.gained_exp(char2))
-    assert(char1.exp == 10)
-    char2.lvl = 4
+    assert(char1.exp == 43)
+    char2.lvl = 3
     char1.take_physical_damage(20)
     assert(char1.current_hp == 83)
     char1.gain_exp(char1.gained_exp(char2))
-    char1.lvl_up()
-    assert(char1.exp == 70)
+    assert(char1.exp == 26)
     assert(char1.lvl == 2)
     assert(char1.armor == 4)
-    assert(char1.current_hp == 110)
-    assert(char1.hp == 110)
-    assert(char1.lvl_up_exp == 150)
-    char2.lvl = 12
+    assert(char1.current_hp == 105)
+    assert(char1.hp == 105)
+    assert(char1.lvl_up_exp == 140)
+    char2.lvl = 20
     char1.gain_exp(char1.gained_exp(char2))
-    char1.lvl_up()
-    assert(char1.lvl == 6)
-    assert(char1.lvl_up_exp == 757)
-    assert(char1.current_hp == 250)
+    assert(char1.lvl == 4)
+    assert(char1.lvl_up_exp == 340)
+    assert(char1.current_hp == 130)
   }
 
   test("party test"){
@@ -85,17 +83,18 @@ class char_test extends AnyFunSuite {
     val defeat_party: Party = new Party(char4)
     defeat_party.add_party_member(char5)
     defeat_party.add_party_member(char6)
-    win_party.fight_win(defeat_party)
-    assert(win_party.char_list(0).exp == 10)
+    win_party.battle_end(defeat_party)
+    assert(win_party.char_list(0).exp == 0)
+    defeat_party.char_list(0).alive = false
+    defeat_party.char_list(1).alive = false
+    defeat_party.char_list(2).alive = false
+    win_party.battle_end(defeat_party)
+    assert(win_party.char_list(0).exp == 43)
     win_party.char_list(0).alive = false
-    win_party.fight_win(defeat_party)
-    assert(win_party.char_list(0).exp == 10)
-    assert(win_party.char_list(1).exp == 25)
-    defeat_party.char_list(0).lvl = 4
-    assert(defeat_party.char_list(0).lvl == 4)
-    win_party.fight_win(defeat_party)
+    win_party.battle_end(defeat_party)
+    assert(win_party.char_list(0).exp == 43)
     assert(win_party.char_list(1).lvl == 2)
-    assert(win_party.char_list(1).exp == 15)
+    assert(win_party.char_list(1).exp == 7)
   }
 
   test("party size test") {
@@ -110,27 +109,5 @@ class char_test extends AnyFunSuite {
     party.add_party_member(char4)
     party.add_party_member(char5)
     assert(party.char_list.length == 4)
-  }
-
-  test("party death test") {
-    val char1: Character = new Character()
-    val char4: Character = new Character()
-    val win_party: Party = new Party(char1)
-    val defeat_party: Party = new Party(char4)
-    val char2: Character = new Character()
-    val char3: Character = new Character()
-    val char5: Character = new Character()
-    val char6: Character = new Character()
-    win_party.add_party_member(char2)
-    win_party.add_party_member(char3)
-    defeat_party.add_party_member(char5)
-    defeat_party.add_party_member(char6)
-    defeat_party.char_list(0).alive = false
-    defeat_party.char_list(1).alive = false
-    win_party.battle_end(defeat_party)
-    assert(win_party.char_list(0).exp == 0)
-    defeat_party.char_list(2).alive = false
-    win_party.battle_end(defeat_party)
-    assert(win_party.char_list(0).exp == 10)
   }
 }
