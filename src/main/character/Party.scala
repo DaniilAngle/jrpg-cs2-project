@@ -47,6 +47,5 @@ class Party(main_char: Character){
         }
       }
     }
-
   }
 }

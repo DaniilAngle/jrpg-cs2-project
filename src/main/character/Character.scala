@@ -1,14 +1,17 @@
 package character
 
-class Character {
-  var hp: Int = 100
+import scala.collection.mutable.ListBuffer
+
+class Character(base_hp: Int =  100, base_mp: Int = 100, base_attack: Int = 10,
+                base_m_attack: Int = 20, base_def: Int = 3, base_m_def: Int = 9) {
+  var hp: Int = base_hp
   var current_hp: Int = this.hp
-  var magic: Int = 100
+  var magic: Int = base_mp
   var current_magic: Int = this.magic
-  var attack_power: Int = 10
-  var armor: Int = 3
-  var magic_def: Int = 9
-  var magic_power: Int = 20
+  var attack_power: Int = base_attack
+  var armor: Int = base_def
+  var magic_def: Int = base_m_def
+  var magic_power: Int = base_m_attack
   var alive: Boolean = true
   var exp: Int = 0
   var lvl: Int = 1
@@ -47,9 +50,9 @@ class Character {
     }
   }
 
-  def magic_attack(opponent: Character, consumption: Int): Unit = {
+  def magic_attack(opponent: Character, consumption: Int, extra: Int = 0): Unit = {
     if (use_magic(consumption)) {
-      opponent.take_magical_damage(this.magic_power+consumption)
+      opponent.take_magical_damage(this.magic_power+(consumption/5) + extra)
     }
   }
 
@@ -79,6 +82,29 @@ class Character {
       this.magic_power += this.lvl
       this.magic_def += this.lvl
       this.lvl += 1
+    }
+  }
+
+  def curValues(): Unit = {
+    val stats = "LVL:" + this.lvl.toString + " exp:" + this.exp.toString + " lvlUp:" + this.lvl_up_exp.toString + " Max hp:" + this.hp.toString + " HP:" + this.current_hp.toString +
+      " Max mp:" + this.magic + " MP:" + this.current_magic + " Def:" + this.armor + " Mag def:" + this.magic_def + " Power:" + this.attack_power + " M power:" + this.magic_power
+    println(stats)
+  }
+
+  var action_list: ListBuffer[String] = ListBuffer("Physical Attack")
+
+  def add_action(action: String): Unit = {
+    if (action_list.length < 4) {
+      action_list += action
+    }
+  }
+  def battleOptions(): List[String] = {
+    action_list.toList
+  }
+
+  def takeAction(option: String, creature: Character, party: Party): Unit = {
+    if (option == "Physical Attack") {
+      this.physical_attack(creature)
     }
   }
 }

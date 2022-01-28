@@ -1,5 +1,5 @@
 import org.scalatest.funsuite.AnyFunSuite
-import character.{Character, Party}
+import character.{Character, Healer, Mage, Party, Warrior}
 
 class char_test extends AnyFunSuite {
   test("Testing initial val") {
@@ -39,9 +39,9 @@ class char_test extends AnyFunSuite {
     assert(char2.current_hp == 93)
     char1.magic_attack(char2, 10)
     assert(char1.current_magic == 90)
-    assert(char2.current_hp == 72)
+    assert(char2.current_hp == 80)
     char1.magic_attack(char2, 100)
-    assert(char2.current_hp == 72)
+    assert(char2.current_hp == 80)
     assert(char1.current_magic == 90)
   }
 
@@ -109,5 +109,16 @@ class char_test extends AnyFunSuite {
     party.add_party_member(char4)
     party.add_party_member(char5)
     assert(party.char_list.length == 4)
+  }
+  test("type test, attacks, aoe attacks") {
+    val warrior: Warrior = new Warrior()
+    val healer: Healer = new  Healer()
+    val mage: Mage = new Mage()
+    val party1: Party = new Party(warrior)
+    val party2: Party = new Party(mage)
+    party1.add_party_member(healer)
+    party1.char_list(0).curValues()
+    party1.char_list(1).curValues()
+    party2.char_list(0).curValues()
   }
 }
