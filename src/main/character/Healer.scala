@@ -5,12 +5,19 @@ class Healer(base_hp: Int =  110, base_mp: Int = 150, base_attack: Int = 1,
              base_m_def: Int = 20) extends Character(base_hp, base_mp, base_attack, base_m_attack, base_def, base_m_def) {
 
   override def lvl_up(): Unit = {
-    this.magic += this.lvl * 2 + 20
-    this.hp += this.lvl * 3
-    this.magic_power += this.lvl + 3
-    this.magic_def += this.lvl + 2
-    this.armor += this.lvl / 2
-    this.attack_power += this.lvl / 3
+    while (this.lvl_up_exp <= this.exp) {
+      this.exp -= this.lvl_up_exp
+      this.lvl_up_exp += 40 * this.lvl
+      this.hp += this.lvl * 3
+      this.magic += this.lvl * 2 + 20
+      this.current_hp = this.hp
+      this.current_magic = this.magic
+      this.armor += this.lvl
+      this.attack_power += this.lvl / 2
+      this.magic_power += this.lvl + 3
+      this.magic_def += this.lvl + 2
+      this.lvl += 1
+    }
   }
 
   def healing(creature: Character, healing: Int): Unit = {
@@ -43,13 +50,15 @@ class Healer(base_hp: Int =  110, base_mp: Int = 150, base_attack: Int = 1,
   }
 
   override def battleOptions(): List[String] = {
-    if (this.current_magic >= 30) {
+    action_list.clear()
+    action_list += "Physical Attack"
+    if (this.current_magic >= 30 && !action_list.contains("Heal")) {
       action_list += "Heal"
     }
-    if (this.current_magic >= 40) {
+    if (this.current_magic >= 40 && !action_list.contains("Holy Ray")) {
       action_list += "Holy Ray"
     }
-    if (this.lvl >= 15 && this.current_magic >= 200) {
+    if (this.lvl >= 15 && this.current_magic >= 200 && !action_list.contains("Heal Party")) {
       action_list += "Heal Party"
     }
     action_list.toList

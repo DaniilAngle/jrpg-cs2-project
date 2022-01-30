@@ -70,7 +70,7 @@ class Character(base_hp: Int =  100, base_mp: Int = 100, base_attack: Int = 10,
   }
 
   def lvl_up(): Unit = {
-    while (this.lvl_up_exp < this.exp) {
+    while (this.lvl_up_exp <= this.exp) {
       this.exp -= this.lvl_up_exp
       this.lvl_up_exp += 40 * this.lvl
       this.hp += 5 * this.lvl
@@ -86,8 +86,8 @@ class Character(base_hp: Int =  100, base_mp: Int = 100, base_attack: Int = 10,
   }
 
   def curValues(): Unit = {
-    val stats = "LVL:" + this.lvl.toString + " exp:" + this.exp.toString + " lvlUp:" + this.lvl_up_exp.toString + " Max hp:" + this.hp.toString + " HP:" + this.current_hp.toString +
-      " Max mp:" + this.magic + " MP:" + this.current_magic + " Def:" + this.armor + " Mag def:" + this.magic_def + " Power:" + this.attack_power + " M power:" + this.magic_power
+    val stats = "LVL:" + this.lvl.toString + " exp:" + this.exp.toString + "/" + this.lvl_up_exp.toString + " HP:" + this.current_hp.toString + "/" + this.hp.toString +
+      " MP:" + this.current_magic + "/" + this.magic + " Def:" + this.armor + " Mag def:" + this.magic_def + " Power:" + this.attack_power + " M power:" + this.magic_power
     println(stats)
   }
 
@@ -99,6 +99,8 @@ class Character(base_hp: Int =  100, base_mp: Int = 100, base_attack: Int = 10,
     }
   }
   def battleOptions(): List[String] = {
+    action_list.clear()
+    action_list += "Physical Attack"
     action_list.toList
   }
 

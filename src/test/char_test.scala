@@ -110,15 +110,116 @@ class char_test extends AnyFunSuite {
     party.add_party_member(char5)
     assert(party.char_list.length == 4)
   }
-  test("type test, attacks, aoe attacks") {
+  test("initial stats") {
+    val warrior: Warrior = new Warrior()
+    val healer: Healer = new  Healer()
+    val mage: Mage = new Mage()
+    assert(warrior.current_hp == 130)
+    assert(warrior.armor == 13)
+    assert(warrior.attack_power == 18)
+    assert(warrior.current_hp == 130)
+    assert(healer.hp == 110)
+    assert(healer.armor == 2)
+    assert(healer.magic == 150)
+    assert(healer.current_magic == 150)
+    assert(mage.magic == 200)
+    assert(mage.alive)
+    assert(mage.magic_power == 30)
+  }
+
+  test("lvl up stats") {
+    val warrior: Warrior = new Warrior()
+    val healer: Healer = new  Healer()
+    val mage: Mage = new Mage()
+    warrior.gain_exp(100)
+    assert(warrior.lvl == 2)
+    assert(warrior.armor == 15)
+    assert(warrior.hp == 135)
+    healer.gain_exp(300)
+    assert(healer.lvl == 3)
+    assert(healer.magic == 196)
+    mage.gain_exp(500)
+    assert(mage.lvl == 4)
+    assert(mage.magic_power == 51)
+  }
+
+  test("battle options") {
+    val warrior: Warrior = new Warrior()
+    val healer: Healer = new  Healer()
+    val mage: Mage = new Mage()
+    assert(warrior.battleOptions() == List("Physical Attack", "Smash"))
+    warrior.lvl = 20
+    assert(warrior.battleOptions() == List("Physical Attack", "Smash", "Dark Slash"))
+    warrior.current_hp = 10
+    assert(warrior.battleOptions() == List("Physical Attack", "Dark Slash"))
+    assert(healer.battleOptions() == List("Physical Attack", "Heal", "Holy Ray"))
+    healer.lvl = 15
+    assert(healer.battleOptions() == List("Physical Attack", "Heal", "Holy Ray"))
+    healer.current_magic = 200
+    assert(healer.battleOptions() == List("Physical Attack", "Heal", "Holy Ray", "Heal Party"))
+    assert(mage.battleOptions() == List("Physical Attack", "Fireball"))
+    mage.lvl = 5
+    assert(mage.battleOptions() == List("Physical Attack", "Fireball", "Dark Energy"))
+    mage.lvl = 10
+    assert(mage.battleOptions() == List("Physical Attack", "Fireball", "Dark Energy"))
+    mage.current_magic = 300
+    assert(mage.battleOptions() == List("Physical Attack", "Fireball", "Dark Energy", "Firewall"))
+    mage.current_magic = 0
+    assert(mage.battleOptions() == List("Physical Attack"))
+  }
+
+  test("attacks, aoe attacks, heals") {
     val warrior: Warrior = new Warrior()
     val healer: Healer = new  Healer()
     val mage: Mage = new Mage()
     val party1: Party = new Party(warrior)
     val party2: Party = new Party(mage)
     party1.add_party_member(healer)
-    party1.char_list(0).curValues()
+    party1.char_list.head.takeAction("Smash", party2.char_list.head, party2)
+    assert(party2.char_list.head.current_hp == 45)
+    assert(party1.char_list.head.current_hp == 115)
+    party1.char_list.head.takeAction("Bash", party2.char_list.head, party2)
+    assert(party2.char_list.head.current_hp == 45)
+    party1.char_list.head.takeAction("Dark Slash", party2.char_list.head, party2)
+    party1.char_list.head.lvl = 5
+    party2.char_list.head.current_hp = 150
+    party1.char_list.head.takeAction("Dark Slash", party2.char_list.head, party2)
+    assert(party2.char_list.head.current_hp == 105)
+    party1.char_list.head.takeAction("Physical Attack", party2.char_list.head, party2)
+    assert(party2.char_list.head.current_hp == 89)
+    party2.char_list.head.takeAction("Firewall", party1.char_list.head, party1)
+    assert(party1.char_list.head.current_hp == 115)
+    party2.char_list.head.lvl = 10
+    party2.char_list.head.current_magic = 300
+    party2.char_list.head.hp = 120
+    party2.char_list.head.takeAction("Firewall", party1.char_list.head, party1)
+    party1.char_list.head.curValues()
+    assert(party1.char_list.head.current_hp == 42)
+    party2.char_list.head.curValues()
+    party1.char_list(1).takeAction("Heal", party1.char_list.head, party1)
+    assert(party1.char_list.head.current_hp == 62)
+    assert(party1.char_list(1).current_hp == 50)
     party1.char_list(1).curValues()
-    party2.char_list(0).curValues()
+    party1.char_list(1).gain_exp(300)
+    party1.char_list(1).curValues()
+    party2.char_list.head.takeAction("Fireball", party1.char_list(1), party1)
+    assert(party1.char_list(1).current_hp == 103)
+    party1.char_list(1).takeAction("Heal", party1.char_list.head, party1)
+    assert(party1.char_list.head.current_hp == 92)
+    party1.char_list(1).takeAction("Heal", party1.char_list(1), party1)
+    assert(party1.char_list(1).current_hp == 119)
+    party2.char_list.head.current_magic = 300
+    party2.char_list.head.takeAction("Fireball", party1.char_list(1), party1)
+    assert(party1.char_list(1).current_hp == 103)
+    party1.char_list(1).current_magic = 300
+    party1.char_list(1).lvl = 15
+    assert(party2.char_list.head.current_hp == 89)
+    party1.char_list(1).takeAction("Heal Party", party1.char_list.head, party1)
+    assert(party1.char_list(1).current_hp == 119)
+    assert(party1.char_list.head.current_hp == 130)
+    assert(party2.char_list.head.current_hp == 89)
+    party1.char_list.head.takeAction("Smash", party2.char_list.head, party2)
+    assert(party2.char_list.head.current_hp == 46)
+    assert(party1.char_list.head.current_hp == 115)
   }
 }

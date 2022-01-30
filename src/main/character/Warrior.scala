@@ -6,20 +6,21 @@ class Warrior (base_hp: Int =  130, base_mp: Int = 30, base_attack: Int = 18,
                base_m_attack: Int = 11, base_def: Int = 13,
                base_m_def: Int = 7) extends Character(base_hp, base_mp, base_attack, base_m_attack, base_def, base_m_def) {
 
-  var can_use_moves: Boolean = true
 
   override def lvl_up(): Unit = {
-    this.magic += this.lvl
-    this.hp += this.lvl * 5
-    this.magic_power += this.lvl
-    this.magic_def += this.lvl
-    this.armor += this.lvl * 2
-    this.attack_power += this.lvl + 5
-  }
-
-  override def physical_attack(opponent: Character): Unit = {
-    can_use_moves = true
-    super.physical_attack(opponent)
+    while (this.lvl_up_exp <= this.exp) {
+      this.exp -= this.lvl_up_exp
+      this.lvl_up_exp += 40 * this.lvl
+      this.hp += this.lvl * 5
+      this.magic += this.lvl
+      this.current_hp = this.hp
+      this.current_magic = this.magic
+      this.armor += this.lvl * 2
+      this.attack_power += this.lvl + 5
+      this.magic_power += this.lvl
+      this.magic_def += this.lvl + 1
+      this.lvl += 1
+    }
   }
 
   def smash(opponent: Character): Unit = {
@@ -37,11 +38,12 @@ class Warrior (base_hp: Int =  130, base_mp: Int = 30, base_attack: Int = 18,
   }
 
   override def battleOptions(): List[String] = {
-    super.battleOptions()
-    if (this.current_hp > 15) {
+    action_list.clear()
+    action_list += "Physical Attack"
+    if (this.current_hp > 15 && !action_list.contains("Smash")) {
       action_list += "Smash"
     }
-    if (this.lvl >= 5) {
+    if (this.lvl >= 5 && this.current_magic >= 15 && !action_list.contains("Dark Slash")) {
       action_list += "Dark Slash"
     }
     action_list.toList
