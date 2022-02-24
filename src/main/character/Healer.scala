@@ -51,7 +51,9 @@ class Healer(base_hp: Int =  110, base_mp: Int = 150, base_attack: Int = 1,
 
   override def battleOptions(): List[String] = {
     action_list.clear()
-    action_list += "Physical Attack"
+    if (this.alive) {
+      action_list += "Physical Attack"
+    }
     if (this.current_magic >= 30 && !action_list.contains("Heal")) {
       action_list += "Heal"
     }

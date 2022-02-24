@@ -39,7 +39,9 @@ class Warrior (base_hp: Int =  130, base_mp: Int = 30, base_attack: Int = 18,
 
   override def battleOptions(): List[String] = {
     action_list.clear()
-    action_list += "Physical Attack"
+    if (this.alive) {
+      action_list += "Physical Attack"
+    }
     if (this.current_hp > 15 && !action_list.contains("Smash")) {
       action_list += "Smash"
     }

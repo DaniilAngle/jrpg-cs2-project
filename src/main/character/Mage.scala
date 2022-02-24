@@ -46,7 +46,9 @@ class Mage(base_hp: Int =  80, base_mp: Int = 200, base_attack: Int = 3,
 
   override def battleOptions(): List[String] = {
     action_list.clear()
-    action_list += "Physical Attack"
+    if (this.alive) {
+      action_list += "Physical Attack"
+    }
     if (this.current_magic >= 40 && !action_list.contains("Fireball")) {
       add_action("Fireball" )
     }

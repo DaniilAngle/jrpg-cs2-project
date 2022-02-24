@@ -42,9 +42,6 @@ class Party(main_char: Character){
     for (member <- this.char_list.indices) {
       if (this.char_list(member).alive) {
         this.char_list(member).gain_exp(distributed_exp)
-        if (this.char_list(member).lvl_up_exp < this.char_list(member).exp) {
-          this.char_list(member).lvl_up()
-        }
       }
     }
   }

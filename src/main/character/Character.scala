@@ -100,7 +100,9 @@ class Character(base_hp: Int =  100, base_mp: Int = 100, base_attack: Int = 10,
   }
   def battleOptions(): List[String] = {
     action_list.clear()
-    action_list += "Physical Attack"
+    if (this.alive) {
+      action_list += "Physical Attack"
+    }
     action_list.toList
   }
 

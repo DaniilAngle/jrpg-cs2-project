@@ -1,0 +1,151 @@
+
+body {
+    background: url("/battle-background-sunny-hillsx4.png") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.main-frame {
+    margin-top: 6vh;
+    position: relative;
+}
+
+.container-fluid {
+    position: absolute;
+    bottom: 15px;
+    padding-left: 70px;
+    padding-right: 70px;
+}
+
+.char {
+    position: absolute;
+    -webkit-user-drag: none;
+    margin-left: 55px;
+    margin-right: 55px;
+}
+
+.char-name {
+    margin-top: 120px;
+}
+
+.enemy-char-name {
+    margin-top: 120px;
+}
+
+.container {
+    padding-bottom: 100px;
+}
+
+#second-char, #second-enemy-char{
+    margin-left: 60px;
+    margin-right: 60px;
+}
+
+#enemy-char2, #enemy-char1, #enemy-char3 {
+    transform:scaleX(-1);
+    right: 16vw;
+}
+
+#enemy-char2 {
+    right: 19vw;
+}
+
+#battle-state-info {
+    word-wrap: break-word;
+    color: white;
+    font-family: "Agency FB", serif;
+    font-size: 40px;
+}
+
+.char-name {
+    color: #f7f6cd;
+    font-family: "Agency FB", serif;
+    font-weight: bold;
+    font-size: 20px;
+    margin-left: 50px;
+}
+
+.char-stats {
+    color: #f7f6cd;
+    font-family: "Agency FB", serif;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.enemy-char-name {
+    color: #f7f6cd;
+    font-family: "Agency FB", serif;
+    font-weight: bold;
+    font-size: 20px;
+    margin-right: 50px;
+    text-align: right;
+}
+
+.enemy-char-stats {
+    color: #f7f6cd;
+    font-family: "Agency FB", serif;
+    font-weight: bold;
+    font-size: 20px;
+    text-align: right;
+}
+
+.btn-primary {
+    margin: 4px;
+}
+
+#sword {
+    position: absolute;
+}
+
+@-webkit-keyframes fight {
+    50% {background: red; opacity: 1}
+    100% {backface-visibility: hidden }
+}
+
+@-webkit-keyframes zero-damage {
+    50% {background: white; opacity: 1}
+    100% {backface-visibility: hidden }
+}
+
+@-webkit-keyframes heal {
+    50% {background: green; opacity: 1}
+    100% {backface-visibility: hidden }
+}
+
+.fighting {
+    animation-direction: normal;
+    animation-duration: 5s;
+    animation-iteration-count: 1;
+    animation-name: fight;
+    animation-timing-function: ease;
+    position: absolute;
+    -webkit-user-drag: none;
+    margin-left: 55px;
+    margin-right: 55px;
+}
+
+.healing {
+    animation-direction: normal;
+    animation-duration: 5s;
+    animation-iteration-count: 1;
+    animation-name: heal;
+    animation-timing-function: ease;
+    position: absolute;
+    -webkit-user-drag: none;
+    margin-left: 55px;
+    margin-right: 55px;
+}
+
+.no-damage {
+    animation-direction: normal;
+    animation-duration: 5s;
+    animation-iteration-count: 1;
+    animation-name: zero-damage;
+    animation-timing-function: ease;
+    position: absolute;
+    -webkit-user-drag: none;
+    margin-left: 55px;
+    margin-right: 55px;
+}
