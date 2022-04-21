@@ -2,10 +2,8 @@ package character
 
 import scala.collection.mutable.ListBuffer
 
-class Party(main_char: Character){
-  var char_list: ListBuffer[Character] = ListBuffer(
-    main_char
-  )
+class Party(){
+  var char_list: ListBuffer[Character] = ListBuffer()
 
 
   def add_party_member(character: Character): Unit = {

@@ -4,6 +4,8 @@ class Healer(base_hp: Int =  110, base_mp: Int = 150, base_attack: Int = 1,
              base_m_attack: Int = 15, base_def: Int = 2,
              base_m_def: Int = 20) extends Character(base_hp, base_mp, base_attack, base_m_attack, base_def, base_m_def) {
 
+  charType = "healer"
+
   override def lvl_up(): Unit = {
     while (this.lvl_up_exp <= this.exp) {
       this.exp -= this.lvl_up_exp

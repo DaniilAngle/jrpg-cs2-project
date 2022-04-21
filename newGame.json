@@ -1,0 +1,31 @@
+{
+  "characters": [
+    {
+      "name": "Beetroot",
+      "type": "mage",
+      "exp": 0,
+      "lvl": 1,
+      "currentHP": 80,
+      "currentMP": 200,
+      "alive": true
+    },
+    {
+      "name": "RootBeet",
+      "type": "warrior",
+      "exp": 0,
+      "lvl": 1,
+      "currentHP": 130,
+      "currentMP": 30,
+      "alive": true
+    },
+    {
+      "name": "MeatShield",
+      "type": "healer",
+      "exp": 0,
+      "lvl": 1,
+      "currentHP": 110,
+      "currentMP": 150,
+      "alive": true
+    }
+  ]
+}

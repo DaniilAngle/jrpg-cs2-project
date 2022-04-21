@@ -6,6 +6,7 @@ class Warrior (base_hp: Int =  130, base_mp: Int = 30, base_attack: Int = 18,
                base_m_attack: Int = 11, base_def: Int = 13,
                base_m_def: Int = 7) extends Character(base_hp, base_mp, base_attack, base_m_attack, base_def, base_m_def) {
 
+  charType = "warrior"
 
   override def lvl_up(): Unit = {
     while (this.lvl_up_exp <= this.exp) {

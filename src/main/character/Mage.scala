@@ -6,6 +6,8 @@ class Mage(base_hp: Int =  80, base_mp: Int = 200, base_attack: Int = 3,
            base_m_attack: Int = 30, base_def: Int = 2,
            base_m_def: Int = 25) extends Character(base_hp, base_mp, base_attack, base_m_attack, base_def, base_m_def) {
 
+  charType = "mage"
+
   override def lvl_up(): Unit = {
     while (this.lvl_up_exp <= this.exp) {
       this.exp -= this.lvl_up_exp
