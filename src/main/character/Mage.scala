@@ -2,7 +2,7 @@ package character
 
 import scala.collection.mutable.ListBuffer
 
-class Mage(base_hp: Int =  80, base_mp: Int = 200, base_attack: Int = 3,
+class Mage(base_hp: Int =  80, base_mp: Int = 200, base_attack: Int = 6,
            base_m_attack: Int = 30, base_def: Int = 2,
            base_m_def: Int = 25) extends Character(base_hp, base_mp, base_attack, base_m_attack, base_def, base_m_def) {
 
@@ -25,7 +25,7 @@ class Mage(base_hp: Int =  80, base_mp: Int = 200, base_attack: Int = 3,
   }
 
   def fireball(opponent: Character): Unit = {
-    magic_attack(opponent,40, 5)
+    magic_attack(opponent,35, 5)
   }
 
   def dark_energy(opponent: Character): Unit = {
@@ -51,7 +51,7 @@ class Mage(base_hp: Int =  80, base_mp: Int = 200, base_attack: Int = 3,
     if (this.alive) {
       action_list += "Physical Attack"
     }
-    if (this.current_magic >= 40 && !action_list.contains("Fireball")) {
+    if (this.current_magic >= 35 && !action_list.contains("Fireball")) {
       add_action("Fireball" )
     }
     if (this.lvl >= 5 && this.current_magic >= 60 && !action_list.contains("Dark Energy")) {

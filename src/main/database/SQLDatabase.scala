@@ -20,7 +20,7 @@ class SQLDatabase extends Database {
   def playerExists(username: String, password: String): Boolean = {
     val statement = connection.prepareStatement("SELECT * FROM players WHERE username=? AND password=?")
     statement.setString(1, username)
-    statement.setString(2, username)
+    statement.setString(2, password)
     val result: ResultSet = statement.executeQuery()
     result.next()
   }
@@ -30,8 +30,7 @@ class SQLDatabase extends Database {
     val statement = connection.prepareStatement("INSERT INTO players VALUE (?, ?, ?)")
     statement.setString(1, username)
     statement.setString(2, password)
-    val newGame: String = Source.fromFile("newGame.json").mkString
-    statement.setString(3, newGame)
+    statement.setString(3, "")
     statement.execute()
   }
 
@@ -61,7 +60,7 @@ class SQLDatabase extends Database {
 
   def recreateParty(username: String): Unit = {
     val statement = connection.prepareStatement("UPDATE players SET gameState = ? WHERE username = ?")
-    statement.setString(1, "gameState")
+    statement.setString(1, "")
     statement.setString(2, username)
   }
 }

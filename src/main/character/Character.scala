@@ -4,6 +4,7 @@ import scala.collection.mutable.ListBuffer
 
 class Character(base_hp: Int =  100, base_mp: Int = 100, base_attack: Int = 10,
                 base_m_attack: Int = 20, base_def: Int = 3, base_m_def: Int = 9) {
+
   var charType: String = ""
   var name: String = ""
   var hp: Int = base_hp

@@ -1,7 +1,7 @@
 package character
 
-class Healer(base_hp: Int =  110, base_mp: Int = 150, base_attack: Int = 1,
-             base_m_attack: Int = 15, base_def: Int = 2,
+class Healer(base_hp: Int =  110, base_mp: Int = 150, base_attack: Int = 6,
+             base_m_attack: Int = 22, base_def: Int = 2,
              base_m_def: Int = 20) extends Character(base_hp, base_mp, base_attack, base_m_attack, base_def, base_m_def) {
 
   charType = "healer"
@@ -30,8 +30,8 @@ class Healer(base_hp: Int =  110, base_mp: Int = 150, base_attack: Int = 1,
     }
   }
   def heal(creature: Character): Unit = {
-    var heal: Int = 15 + this.lvl * 5
-    if (this.use_magic(30)) {
+    var heal: Int = 25 + this.lvl * 5
+    if (this.use_magic(25)) {
       healing(creature, heal)
     }
   }
@@ -56,7 +56,7 @@ class Healer(base_hp: Int =  110, base_mp: Int = 150, base_attack: Int = 1,
     if (this.alive) {
       action_list += "Physical Attack"
     }
-    if (this.current_magic >= 30 && !action_list.contains("Heal")) {
+    if (this.current_magic >= 25 && !action_list.contains("Heal")) {
       action_list += "Heal"
     }
     if (this.current_magic >= 40 && !action_list.contains("Holy Ray")) {

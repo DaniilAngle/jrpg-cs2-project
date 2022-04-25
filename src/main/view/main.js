@@ -1,8 +1,122 @@
 const socket = io.connect("http://localhost:8080/", {transports: ['websocket']});
 
+let battleLayoutHTML = '<head>\n' +
+    '    <meta charset="UTF-8">\n' +
+    '    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">\n' +
+    '    <link rel="stylesheet" href="styles.css">\n' +
+    '    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>\n' +
+    '    <script src="main.js"></script>\n' +
+    '    <title>...</title>\n' +
+    '</head>\n' +
+    '<body>\n' +
+    '    <h1 id="battlePlayers" style="color: brown; text-align: center; padding-top: 1vh">admin VS black</h1>\n' +
+    '    <div id="frame" class="main-frame">\n' +
+    '        <img src="" id="sword">\n' +
+    '        <div class="vstack gap-4">\n' +
+    '            <div class="container">\n' +
+    '                <div class="row justify-content-between">\n' +
+    '                    <div class="col">\n' +
+    '                        <div id="name1" class="char-name"></div>\n' +
+    '                        <div id="stats1" class="char-stats"></div>\n' +
+    '                        <img id="char1" class="char" style=" width: 50px">\n' +
+    '                    </div>\n' +
+    '                    <div class="col float-end">\n' +
+    '                        <div id="enemy-name1" class="enemy-char-name"></div>\n' +
+    '                        <div id="enemy-stats1" class="enemy-char-stats"></div>\n' +
+    '                        <img id="enemy-char1" class="char float-end" style=" width: 50px">\n' +
+    '                    </div>\n' +
+    '                </div>\n' +
+    '                <div class="row justify-content-between">\n' +
+    '                    <div id="second-char" class="col">\n' +
+    '                        <div id="name2" class="char-name"></div>\n' +
+    '                        <div id="stats2" class="char-stats"></div>\n' +
+    '                        <img id="char2" class="char" style=" width: 50px">\n' +
+    '                    </div>\n' +
+    '                    <div id="second-enemy-char" class="col float-end">\n' +
+    '                        <div id="enemy-name2" class="enemy-char-name"></div>\n' +
+    '                        <div id="enemy-stats2" class="enemy-char-stats"></div>\n' +
+    '                        <img id="enemy-char2" class="char float-end" style=" width: 50px">\n' +
+    '                    </div>\n' +
+    '                </div>\n' +
+    '                <div class="row justify-content-between">\n' +
+    '                    <div class="col">\n' +
+    '                        <div id="name3" class="char-name"></div>\n' +
+    '                        <div id="stats3" class="char-stats"></div>\n' +
+    '                        <img id="char3" class="char" style=" width: 50px">\n' +
+    '                    </div>\n' +
+    '                    <div class="col float-end">\n' +
+    '                        <div id="enemy-name3" class="enemy-char-name"></div>\n' +
+    '                        <div id="enemy-stats3" class="enemy-char-stats"></div>\n' +
+    '                        <img id="enemy-char3" class="char float-end" style=" width: 50px">\n' +
+    '                    </div>\n' +
+    '                </div>\n' +
+    '            </div>\n' +
+    '        </div>\n' +
+    '    </div>\n' +
+    '    <div class="container-fluid text-center">\n' +
+    '        <div class="row">\n' +
+    '            </div>\n' +
+    '            <div id="battle-state-info" class="col">\n' +
+    '            </div>\n' +
+    '            <div id="battle-option-list" class="col">\n' +
+    '                <div id="battle-option-buttons" class="vstack">\n' +
+    '                </div>\n' +
+    '            </div>\n' +
+    '        </div>\n' +
+    '    </div>\n' +
+    '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>\n' +
+    '</body>'
+
+let lobbyHTML = '<head>\n' +
+    '    <meta charset="UTF-8">\n' +
+    '    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">\n' +
+    '    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>\n' +
+    '    <script src="main.js"></script>\n' +
+    '    <title>...</title>\n' +
+    '</head>\n' +
+    '<body style="background: blanchedalmond">\n' +
+    '<h1 style="text-align: center" id="lobbyMain">Lobby</h1>\n' +
+    '<div style="text-align: center; padding-top: 2vh" id="lobbyPlayers"></div>\n' +
+    '</body>'
+
+let charSelector = "<head>\n" +
+    "  <meta charset=\"UTF-8\">\n" +
+    "  <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3\" crossorigin=\"anonymous\">\n" +
+    "  <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js\"></script>\n" +
+    "  <script src=\"main.js\"></script>\n" +
+    "  <title>...</title>\n" +
+    "</head>\n" +
+    "<body style=\"padding: 3vh; background: blanchedalmond\">\n" +
+    "<h1>Select your heroes</h1>\n" +
+    "<p>First Hero</p>\n" +
+    "<label for=\"char1Name\">Name</label><input id=\"char1Name\">\n" +
+    "<button id=\"char1Mage\" onclick=\"addChar('mage', 0);\">Mage</button>\n" +
+    "<button id=\"char1Warrior\" onclick=\"addChar('warrior', 0)\">Warrior</button>\n" +
+    "<button id=\"char1Healer\" onclick=\"addChar('healer', 0)\">Healer</button>\n" +
+    "<p>Second Hero</p>\n" +
+    "<label for=\"char2Name\">Name</label><input id=\"char2Name\">\n" +
+    "<button id=\"char2Mage\" onclick=\"addChar('mage', 1);\">Mage</button>\n" +
+    "<button id=\"char2Warrior\" onclick=\"addChar('warrior', 1)\">Warrior</button>\n" +
+    "<button id=\"char2Healer\" onclick=\"addChar('healer', 1)\">Healer</button>\n" +
+    "<p>Third Hero</p>\n" +
+    "<label for=\"char3Name\">Name</label><input id=\"char3Name\">\n" +
+    "<button id=\"char3Mage\" onclick=\"addChar('mage', 2);\">Mage</button>\n" +
+    "<button id=\"char3Warrior\" onclick=\"addChar('warrior', 2)\">Warrior</button>\n" +
+    "<button id=\"char3Healer\" onclick=\"addChar('healer', 2)\">Healer</button>\n" +
+    "<hr>\n" +
+    "<button id=\"submitDecision\" onclick=\"sendDecision()\">Submit</button>\n" +
+    "</body>"
+
 loginFail();
 regFail();
-logRegSuccess();
+logSuccess();
+lobbyChange();
+moveToBattle();
+battleGameState();
+battleResult();
+turnReceiver();
+battleGameState();
+decisionResultUpdate();
 
 //registration
 
@@ -10,6 +124,7 @@ let user = ""
 
 function regClicked() {
     user = document.getElementById('username').value
+    document.cookie = `username=${user}; path=/jrpg-cs2-project/view`
     let password = document.getElementById('password').value
     if (user.length !== 0 && password.length >= 4) {
         let data = {'username' : user, 'password' : password}
@@ -23,7 +138,8 @@ function regClicked() {
 
 function loginClicked() {
     document.getElementById('info').innerText = ""
-    let user = document.getElementById('username').value
+    user = document.getElementById('username').value
+    document.cookie = `username=${user}; path=/jrpg-cs2-project/view`
     let password = document.getElementById('password').value
     if (user.length !== 0 && password.length !==0) {
         let data = {'username': user, 'password': password}
@@ -33,13 +149,21 @@ function loginClicked() {
     }
 }
 
-function logRegSuccess() {
+function logSuccess() {
     socket.on('credentialsCorrect', function () {
-        document.location.href = './lobbyPage.html'
+        document.querySelector('html').innerHTML = lobbyHTML
+        document.getElementById('lobbyMain').innerText = `Lobby: ${user}`
         socket.emit('lobbyEntered')
-        lobbyChange();
     });
 }
+
+function regSuccess() {
+    socket.on('regSuccess', function () {
+        document.querySelector('html').innerHTML = charSelector
+    })
+}
+
+regSuccess();
 
 function loginFail() {
     socket.on('loginFailure', function () {
@@ -52,15 +176,51 @@ function regFail() {
     });
 }
 
+//charSelection
+
+let charTypeList = ["", "", ""]
+
+function addChar(type, idx) {
+    charTypeList[idx] = type
+}
+
+function sendDecision() {
+    let name1 = document.getElementById('char1Name').value
+    let name2 = document.getElementById('char2Name').value
+    let name3 = document.getElementById('char3Name').value
+    let charNameList = [name1, name2, name3]
+    if (checkValidity(charNameList) && checkValidity(charTypeList)) {
+        socket.emit('charsSelected', JSON.stringify({"characterNames": charNameList, "characterTypes": charTypeList}))
+        document.querySelector('html').innerHTML = lobbyHTML
+        document.getElementById('lobbyMain').innerText = `Lobby: ${user}`
+        socket.emit('lobbyEntered')
+    }
+
+}
+
+function checkValidity(list) {
+    let check = true
+    for (let element of list) {
+        if (element === "") {
+            check = false
+        }
+    }
+    return check
+}
+
+
 //lobby
 
 let selectedEnemy = ""
 
 function lobbyChange() {
     socket.on('lobbyUpdate', function (lobbyJSON) {
+        while (document.getElementById('lobbyPlayers').hasChildNodes()) {
+            document.getElementById('lobbyPlayers').removeChild(document.getElementById('lobbyPlayers').firstChild)
+        }
         let lobbyData = JSON.parse(lobbyJSON)
         let lobby = document.getElementById("lobbyPlayers")
-        for (let element in lobbyData) {
+        for (let element of lobbyData) {
             let button = document.createElement("button")
             button.innerText = element
             button.className = "btn btn-primary"
@@ -71,31 +231,40 @@ function lobbyChange() {
 }
 
 function battleEnemySelect(enemy) {
-    selectedEnemy = enemy
-    socket.emit('lobbyExited')
-    socket.emit('battleStarted', enemy.toString())
-    document.location.href = './index.html'
-    battleGameState();
+    user = document.cookie.replace("username=", "")
+    if (enemy !== user) {
+        console.log(enemy, user)
+        selectedEnemy = enemy
+        socket.emit('battleStarted', enemy.toString())
+        document.querySelector('html').innerHTML = battleLayoutHTML
+        document.getElementById('battlePlayers').innerText = `${user} vs ${selectedEnemy}`
+    }
 }
 
 //battle
 
 function moveToBattle() {
-    socket.on('battleCall', function () {
-        document.location.href = './index.html'
-        battleGameState();
-        decisionResultUpdate();
+    socket.on('battleCall', function (enemyUsername) {
+        selectedEnemy = enemyUsername
+        document.querySelector('html').innerHTML = battleLayoutHTML
+        document.getElementById('battlePlayers').innerText = `${user} vs ${selectedEnemy}`
     })
 }
 
 function battleGameState() {
     socket.on('updateGameState', function (gameStateFromServer) {
+        console.log(gameStateFromServer)
         update(gameStateFromServer)
     })
 }
 
 function decisionSender(heroName, enemyName, option) {
-    socket.emit('turnDecision', JSON.stringify({"userPartyID": user, "enemyPartyID": selectedEnemy,"hero": heroName, "enemy": enemyName, "option": option}))
+    console.log(heroName + " attacked " + enemyName + " with " + option, "208")
+    if (option === "Heal" || option === "Heal Party") {
+        socket.emit('turnDecision', JSON.stringify({"userPartyID": user, "enemyPartyID": user,"hero": heroName, "enemy": enemyName, "option": option}))
+    } else {
+        socket.emit('turnDecision', JSON.stringify({"userPartyID": user, "enemyPartyID": selectedEnemy,"hero": heroName, "enemy": enemyName, "option": option}))
+    }
 }
 
 function decisionResultUpdate() {
@@ -107,33 +276,51 @@ function decisionResultUpdate() {
         animateHelper(heroName, enemyName, value)
     })
 }
-//GUI
 
-const jsonTest = '{"playerParty":{"characters":[{"name":"Mango", "type": "Mage","mp": 100,"max_mp": 100, "hp":50, "maxHP":70,' +
-    ' "battleOptions":["Physical Attack", "Fireblast", "Heal"]},{"name":"Sagusa","type": "Warrior","mp": 100,"max_mp": 100, "hp":10, "maxHP":70, ' +
-    '"battleOptions":["Physical Attack", "Fireblast"]},{"name":"SukaBlj", "type": "Healer","mp": 100,"max_mp": 100, "hp":50, "maxHP":70,' +
-    ' "battleOptions":["Physical Attack", "Fireblast"]}]}, "enemyParty": {"characters":[{"name":"Sasugo", "type": "Warrior","mp": 100,"max_mp": 100, ' +
-    '"hp":50, "maxHP":70, "battleOptions":["Physical Attack", "Fireblast"]},{"name":"Kusy", "type": "Warrior","mp": 100,"max_mp": 100, ' +
-    '"hp":50, "maxHP":70, "battleOptions":["Physical Attack", "Fireblast"]},{"name":"Fusy", "type": "Warrior","mp": 100,"max_mp": 100, ' +
-    '"hp":50, "maxHP":70, "battleOptions":["Physical Attack", "Fireblast"]}]}}'
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function  battleResult() {
+    socket.on('battleEnded', async function (winner) {
+        document.getElementById('battle-state-info').innerText = `The winner of the battle is ${winner}`
+        selectedEnemy = ""
+        await sleep(4000)
+        document.querySelector('html').innerHTML = lobbyHTML
+        if (user === winner) {
+            socket.emit('lobbyEntered')
+            document.getElementById('lobbyMain').innerText = `Lobby: ${user}`
+        } else {
+            document.querySelector('html').innerHTML = charSelector
+        }
+    })
+}
+
+function turnReceiver() {
+    socket.on('takeTurn', function (charName) {
+        takeTurn(charName)
+    })
+}
+//GUI
 
 let battleOptions = {}
 let enemyCharImgID = {}
 let charSpecs = {}
 let allyCharImgID = {}
+let userCharsNamesToNameID = {}
 
 function setImg(type, div, hp) {
     if (hp === 0) {
         div.src = "/dead.png"
     } else {
         switch (type) {
-            case "Mage":
+            case "mage":
                 div.src = "/Mage.png"
                 break;
-            case "Warrior":
+            case "warrior":
                 div.src = "/Warrior.png"
                 break;
-            case "Healer":
+            case "healer":
                 div.src = "/Healer.png"
         }
     }
@@ -164,6 +351,7 @@ function update(json_data) {
         battleOptions[character.name] = character.battleOptions
         allyCharImgID[imgID] = [character.hp, character.name]
         charSpecs[character.name] = [character.hp, nameID, imgID]
+        userCharsNamesToNameID[character.name] = nameID
         i++
     }
     i = 1
@@ -231,7 +419,7 @@ function enemySelection(name, option) {
     for (let character in enemyCharImgID) {
         if (enemyCharImgID[character][0] > 0) {
             let char = document.getElementById(character)
-            char.setAttribute('onclick', `animateHelper("${name}", "${enemyCharImgID[character][1]}", ${0})`)
+            char.setAttribute('onclick', `decisionSender('${name}', "${enemyCharImgID[character][1]}", '${option}')`)
             char.setAttribute('style', 'cursor: pointer; width: 50px')
         }
     }
@@ -241,17 +429,16 @@ function allySelection(name, option) {
     for (let character in allyCharImgID) {
         if (allyCharImgID[character][0] > 0) {
             let char = document.getElementById(character)
-            char.setAttribute('onclick', `animateHelper("${name}", "${allyCharImgID[character][1]}", ${15})`)
+            char.setAttribute('onclick', `decisionSender("${name}", "${allyCharImgID[character][1]}", "${option}")`)
             char.setAttribute('style', 'cursor: pointer; width: 50px')
         }
     }
 }
 
 function takeTurn(name) {
-    let charName = document.getElementById(charSpecs[name][1])
+    let charName = document.getElementById(userCharsNamesToNameID[name])
     charName.setAttribute('style', 'color: red')
     let infoDiv = document.getElementById('battle-state-info')
-    infoDiv.innerText = ""
     let div = document.getElementById("battle-option-buttons")
     while (div.hasChildNodes()) {
         div.removeChild(div.firstChild)
@@ -261,38 +448,11 @@ function takeTurn(name) {
         optionButton.className = "btn btn-primary"
         optionButton.innerText = option
         if (option === "Heal" || option === "Heal Party") {
-            optionButton.setAttribute('onclick', `allySelection("${name}, ${option}")`)
+            optionButton.setAttribute('onclick', `allySelection("${name}", "${option}")`)
             div.appendChild(optionButton)
         } else {
-            optionButton.setAttribute('onclick', `enemySelection("${name}, ${option}")`)
+            optionButton.setAttribute('onclick', `enemySelection("${name}", "${option}")`)
             div.appendChild(optionButton)
         }
     }
-}
-
-function loseBattle() {
-    const loseBattleTest = '{"playerParty":{"characters":[{"name":"Mango", "type": "Mage","mp": 100,"max_mp": 100, "hp":0, "maxHP":70,' +
-        ' "battleOptions":["Physical Attack", "Fireblast", "Heal"]},{"name":"Sagusa","type": "Warrior","mp": 100,"max_mp": 100, "hp":0, "maxHP":70, ' +
-        '"battleOptions":["Physical Attack", "Fireblast"]},{"name":"SukaBlyatj", "type": "Healer","mp": 100,"max_mp": 100, "hp":0, "maxHP":70,' +
-        ' "battleOptions":["Physical Attack", "Fireblast"]}]}, "enemyParty": {"characters":[{"name":"Sasugo", "type": "Warrior","mp": 100,"max_mp": 100, ' +
-        '"hp":50, "maxHP":70, "battleOptions":["Physical Attack", "Fireblast"]},{"name":"Kusy", "type": "Warrior","mp": 100,"max_mp": 100, ' +
-        '"hp":50, "maxHP":70, "battleOptions":["Physical Attack", "Fireblast"]},{"name":"Fusy", "type": "Warrior","mp": 100,"max_mp": 100, ' +
-        '"hp":50, "maxHP":70, "battleOptions":["Physical Attack", "Fireblast"]}]}}'
-    update(loseBattleTest)
-}
-
-function  winBattle() {
-    const winBattleTest =  '{"playerParty":{"characters":[{"name":"Mango", "type": "Mage","mp": 100,"max_mp": 100, "hp":50, "maxHP":70,' +
-        ' "battleOptions":["Physical Attack", "Fireblast", "Heal"]},{"name":"Sagusa","type": "Warrior","mp": 100,"max_mp": 100, "hp":10, "maxHP":70, ' +
-        '"battleOptions":["Physical Attack", "Fireblast"]},{"name":"SukaBlyatj", "type": "Healer","mp": 100,"max_mp": 100, "hp":50, "maxHP":70,' +
-        ' "battleOptions":["Physical Attack", "Fireblast"]}]}, "enemyParty": {"characters":[{"name":"Sasugo", "type": "Warrior","mp": 100,"max_mp": 100, ' +
-        '"hp":0, "maxHP":70, "battleOptions":["Physical Attack", "Fireblast"]},{"name":"Kusy", "type": "Warrior","mp": 100,"max_mp": 100, ' +
-        '"hp":0, "maxHP":70, "battleOptions":["Physical Attack", "Fireblast"]},{"name":"Fusy", "type": "Warrior","mp": 100,"max_mp": 100, ' +
-        '"hp":0, "maxHP":70, "battleOptions":["Physical Attack", "Fireblast"]}]}}'
-    update(winBattleTest)
-}
-
-
-function restore() {
-    update(jsonTest)
 }
