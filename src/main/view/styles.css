@@ -38,13 +38,13 @@ body {
     padding-bottom: 100px;
 }
 
-#second-char, #second-enemy-char{
+#second-char, #second-enemy-char {
     margin-left: 60px;
     margin-right: 60px;
 }
 
 #enemy-char2, #enemy-char1, #enemy-char3 {
-    transform:scaleX(-1);
+    transform: scaleX(-1);
     right: 16vw;
 }
 
@@ -100,18 +100,33 @@ body {
 }
 
 @-webkit-keyframes fight {
-    50% {background: red; opacity: 1}
-    100% {backface-visibility: hidden }
+    50% {
+        background: red;
+        opacity: 1
+    }
+    100% {
+        backface-visibility: hidden
+    }
 }
 
 @-webkit-keyframes zero-damage {
-    50% {background: white; opacity: 1}
-    100% {backface-visibility: hidden }
+    50% {
+        background: white;
+        opacity: 1
+    }
+    100% {
+        backface-visibility: hidden
+    }
 }
 
 @-webkit-keyframes heal {
-    50% {background: green; opacity: 1}
-    100% {backface-visibility: hidden }
+    50% {
+        background: green;
+        opacity: 1
+    }
+    100% {
+        backface-visibility: hidden
+    }
 }
 
 .fighting {

@@ -1,8 +1,6 @@
 package character
 
-import scala.collection.mutable.ListBuffer
-
-class Mage(base_hp: Int =  80, base_mp: Int = 200, base_attack: Int = 6,
+class Mage(base_hp: Int = 80, base_mp: Int = 200, base_attack: Int = 6,
            base_m_attack: Int = 30, base_def: Int = 2,
            base_m_def: Int = 25) extends Character(base_hp, base_mp, base_attack, base_m_attack, base_def, base_m_def) {
 
@@ -24,35 +22,13 @@ class Mage(base_hp: Int =  80, base_mp: Int = 200, base_attack: Int = 6,
     }
   }
 
-  def fireball(opponent: Character): Unit = {
-    magic_attack(opponent,35, 5)
-  }
-
-  def dark_energy(opponent: Character): Unit = {
-    if (this.lvl >= 5) {
-      magic_attack(opponent, 60, 20)
-    }
-  }
-
-  def firewall(opponent_party: Party): Unit ={
-    if (this.lvl >= 10) {
-      if (use_magic(250)) {
-        for (member <- opponent_party.char_list) {
-          if (member.alive) {
-            magic_attack(member, 0, 50)
-          }
-        }
-      }
-    }
-  }
-
   override def battleOptions(): List[String] = {
     action_list.clear()
     if (this.alive) {
       action_list += "Physical Attack"
     }
     if (this.current_magic >= 35 && !action_list.contains("Fireball")) {
-      add_action("Fireball" )
+      add_action("Fireball")
     }
     if (this.lvl >= 5 && this.current_magic >= 60 && !action_list.contains("Dark Energy")) {
       add_action("Dark Energy")
@@ -73,6 +49,28 @@ class Mage(base_hp: Int =  80, base_mp: Int = 200, base_attack: Int = 6,
     }
     if (option == "Firewall") {
       this.firewall(party)
+    }
+  }
+
+  def fireball(opponent: Character): Unit = {
+    magic_attack(opponent, 35, 5)
+  }
+
+  def dark_energy(opponent: Character): Unit = {
+    if (this.lvl >= 5) {
+      magic_attack(opponent, 60, 20)
+    }
+  }
+
+  def firewall(opponent_party: Party): Unit = {
+    if (this.lvl >= 10) {
+      if (use_magic(250)) {
+        for (member <- opponent_party.char_list) {
+          if (member.alive) {
+            magic_attack(member, 0, 50)
+          }
+        }
+      }
     }
   }
 }

@@ -2,7 +2,7 @@ package character
 
 import scala.collection.mutable.ListBuffer
 
-class Party(){
+class Party() {
   var char_list: ListBuffer[Character] = ListBuffer()
 
 
@@ -36,7 +36,7 @@ class Party(){
         alive_members += 1
       }
     }
-    distributed_exp = exp_from_battle/alive_members
+    distributed_exp = exp_from_battle / alive_members
     for (member <- this.char_list.indices) {
       if (this.char_list(member).alive) {
         this.char_list(member).gain_exp(distributed_exp)

@@ -1,4 +1,4 @@
-const socket = io.connect("http://localhost:8080/", {transports: ['websocket']});
+const socket = io.connect("http://localhost:8081/", {transports: ['websocket']});
 
 let battleLayoutHTML = '<head>\n' +
     '    <meta charset="UTF-8">\n' +
@@ -127,7 +127,7 @@ function regClicked() {
     document.cookie = `username=${user}; path=/jrpg-cs2-project/view`
     let password = document.getElementById('password').value
     if (user.length !== 0 && password.length >= 4) {
-        let data = {'username' : user, 'password' : password}
+        let data = {'username': user, 'password': password}
         socket.emit('regClicked', JSON.stringify(data))
     } else if (user.length === 0 && password.length === 0) {
         document.getElementById('info').innerText = "Please fill in the spaces"
@@ -141,7 +141,7 @@ function loginClicked() {
     user = document.getElementById('username').value
     document.cookie = `username=${user}; path=/jrpg-cs2-project/view`
     let password = document.getElementById('password').value
-    if (user.length !== 0 && password.length !==0) {
+    if (user.length !== 0 && password.length !== 0) {
         let data = {'username': user, 'password': password}
         socket.emit('logClicked', JSON.stringify(data))
     } else {
@@ -170,6 +170,7 @@ function loginFail() {
         document.getElementById('info').innerText = "Username or password is incorrect"
     });
 }
+
 function regFail() {
     socket.on('regFailure', function () {
         document.getElementById('info').innerText = "Username already exists"
@@ -261,9 +262,21 @@ function battleGameState() {
 function decisionSender(heroName, enemyName, option) {
     console.log(heroName + " attacked " + enemyName + " with " + option, "208")
     if (option === "Heal" || option === "Heal Party") {
-        socket.emit('turnDecision', JSON.stringify({"userPartyID": user, "enemyPartyID": user,"hero": heroName, "enemy": enemyName, "option": option}))
+        socket.emit('turnDecision', JSON.stringify({
+            "userPartyID": user,
+            "enemyPartyID": user,
+            "hero": heroName,
+            "enemy": enemyName,
+            "option": option
+        }))
     } else {
-        socket.emit('turnDecision', JSON.stringify({"userPartyID": user, "enemyPartyID": selectedEnemy,"hero": heroName, "enemy": enemyName, "option": option}))
+        socket.emit('turnDecision', JSON.stringify({
+            "userPartyID": user,
+            "enemyPartyID": selectedEnemy,
+            "hero": heroName,
+            "enemy": enemyName,
+            "option": option
+        }))
     }
 }
 
@@ -281,7 +294,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function  battleResult() {
+function battleResult() {
     socket.on('battleEnded', async function (winner) {
         document.getElementById('battle-state-info').innerText = `The winner of the battle is ${winner}`
         selectedEnemy = ""
@@ -301,6 +314,7 @@ function turnReceiver() {
         takeTurn(charName)
     })
 }
+
 //GUI
 
 let battleOptions = {}
@@ -335,15 +349,16 @@ function setStats(character, div) {
     div.innerText = "HP: " + character.hp.toString() + "/" + character.maxHP.toString() + " MP: " + character.mp.toString() +
         "/" + character.max_mp.toString()
 }
+
 function update(json_data) {
     let battle_specs = JSON.parse(json_data)
     let i = 1
     //player party
     for (let character of battle_specs.playerParty.characters) {
-        let nameID = "name"+i.toString()
+        let nameID = "name" + i.toString()
         let nameDiv = document.getElementById(nameID)
         setName(character.name, nameDiv)
-        let statDiv = document.getElementById("stats"+i.toString())
+        let statDiv = document.getElementById("stats" + i.toString())
         setStats(character, statDiv)
         let imgID = "char" + i.toString()
         let typeDiv = document.getElementById(imgID)
@@ -357,7 +372,7 @@ function update(json_data) {
     i = 1
     //enemy party
     for (let character of battle_specs.enemyParty.characters) {
-        let nameID = "enemy-name"+i.toString()
+        let nameID = "enemy-name" + i.toString()
         let nameDiv = document.getElementById(nameID)
         setName(character.name, nameDiv)
         let statDiv = document.getElementById("enemy-stats" + i.toString())
@@ -396,7 +411,7 @@ function animate_(heroName, enemyName, value) {
             enemyImg.className = 'char'
         }
     } else {
-        infoDiv.innerText = `${heroName} restored ${value*(-1)} health to ${enemyName}`
+        infoDiv.innerText = `${heroName} restored ${value * (-1)} health to ${enemyName}`
         enemyImg.className = 'healing'
         enemyImg.onanimationend = () => {
             enemyImg.className = 'char'
@@ -405,7 +420,7 @@ function animate_(heroName, enemyName, value) {
 }
 
 function animateHelper(heroName, enemyName, value) {
-    animate_(heroName,enemyName,value)
+    animate_(heroName, enemyName, value)
     let div = document.getElementById("battle-option-buttons")
     while (div.hasChildNodes()) {
         div.removeChild(div.firstChild)

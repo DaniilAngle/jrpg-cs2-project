@@ -2,7 +2,7 @@ package character
 
 import scala.collection.mutable.ListBuffer
 
-class Character(base_hp: Int =  100, base_mp: Int = 100, base_attack: Int = 10,
+class Character(base_hp: Int = 100, base_mp: Int = 100, base_attack: Int = 10,
                 base_m_attack: Int = 20, base_def: Int = 3, base_m_def: Int = 9) {
 
   var charType: String = ""
@@ -19,29 +19,22 @@ class Character(base_hp: Int =  100, base_mp: Int = 100, base_attack: Int = 10,
   var exp: Int = 0
   var lvl: Int = 1
   var lvl_up_exp: Int = 100
+  var action_list: ListBuffer[String] = ListBuffer("Physical Attack")
 
-  def take_physical_damage(dmg: Int): Unit = {
-    if (dmg > this.armor) {
-      this.current_hp -=  (dmg - this.armor)
-      if (this.current_hp <= 0) {
-        this.current_hp = 0
-        this.alive = false
-      }
+  def magic_attack(opponent: Character, consumption: Int, extra: Int = 0): Unit = {
+    if (use_magic(consumption)) {
+      opponent.take_magical_damage(this.magic_power + (consumption / 5) + extra)
     }
   }
 
   def take_magical_damage(dmg: Int): Unit = {
     if (dmg > this.magic_def) {
-      this.current_hp -=  (dmg - this.magic_def)
+      this.current_hp -= (dmg - this.magic_def)
       if (this.current_hp <= 0) {
         this.current_hp = 0
         this.alive = false
       }
     }
-  }
-
-  def physical_attack(opponent: Character): Unit = {
-    opponent.take_physical_damage(this.attack_power)
   }
 
   def use_magic(consumption: Int): Boolean = {
@@ -50,12 +43,6 @@ class Character(base_hp: Int =  100, base_mp: Int = 100, base_attack: Int = 10,
       true
     } else {
       false
-    }
-  }
-
-  def magic_attack(opponent: Character, consumption: Int, extra: Int = 0): Unit = {
-    if (use_magic(consumption)) {
-      opponent.take_magical_damage(this.magic_power+(consumption/5) + extra)
     }
   }
 
@@ -94,13 +81,12 @@ class Character(base_hp: Int =  100, base_mp: Int = 100, base_attack: Int = 10,
     println(stats)
   }
 
-  var action_list: ListBuffer[String] = ListBuffer("Physical Attack")
-
   def add_action(action: String): Unit = {
     if (action_list.length < 4) {
       action_list += action
     }
   }
+
   def battleOptions(): List[String] = {
     action_list.clear()
     if (this.alive) {
@@ -112,6 +98,20 @@ class Character(base_hp: Int =  100, base_mp: Int = 100, base_attack: Int = 10,
   def takeAction(option: String, creature: Character, party: Party): Unit = {
     if (option == "Physical Attack") {
       this.physical_attack(creature)
+    }
+  }
+
+  def physical_attack(opponent: Character): Unit = {
+    opponent.take_physical_damage(this.attack_power)
+  }
+
+  def take_physical_damage(dmg: Int): Unit = {
+    if (dmg > this.armor) {
+      this.current_hp -= (dmg - this.armor)
+      if (this.current_hp <= 0) {
+        this.current_hp = 0
+        this.alive = false
+      }
     }
   }
 }

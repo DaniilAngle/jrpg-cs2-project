@@ -1,5 +1,5 @@
-import org.scalatest.funsuite.AnyFunSuite
 import character.{Character, Healer, Mage, Party, Warrior}
+import org.scalatest.funsuite.AnyFunSuite
 
 class char_test extends AnyFunSuite {
   test("Testing initial val") {
@@ -31,7 +31,7 @@ class char_test extends AnyFunSuite {
     assert(char2.current_hp == 100)
   }
 
-  test("attack other character"){
+  test("attack other character") {
     val char1: Character = new Character()
     val char2: Character = new Character()
     assert(char1.current_hp == 100)
@@ -45,7 +45,7 @@ class char_test extends AnyFunSuite {
     assert(char1.current_magic == 90)
   }
 
-  test("gain exp character"){
+  test("gain exp character") {
     val char1: Character = new Character()
     val char2: Character = new Character()
     assert(char1.lvl == 1)
@@ -70,7 +70,7 @@ class char_test extends AnyFunSuite {
     assert(char1.current_hp == 130)
   }
 
-  test("party test"){
+  test("party test") {
     val char1: Character = new Character()
     val char2: Character = new Character()
     val char3: Character = new Character()
@@ -112,7 +112,7 @@ class char_test extends AnyFunSuite {
   }
   test("initial stats") {
     val warrior: Warrior = new Warrior()
-    val healer: Healer = new  Healer()
+    val healer: Healer = new Healer()
     val mage: Mage = new Mage()
     assert(warrior.current_hp == 130)
     assert(warrior.armor == 13)
@@ -129,7 +129,7 @@ class char_test extends AnyFunSuite {
 
   test("lvl up stats") {
     val warrior: Warrior = new Warrior()
-    val healer: Healer = new  Healer()
+    val healer: Healer = new Healer()
     val mage: Mage = new Mage()
     warrior.gain_exp(100)
     assert(warrior.lvl == 2)
@@ -145,7 +145,7 @@ class char_test extends AnyFunSuite {
 
   test("battle options") {
     val warrior: Warrior = new Warrior()
-    val healer: Healer = new  Healer()
+    val healer: Healer = new Healer()
     val mage: Mage = new Mage()
     assert(warrior.battleOptions() == List("Physical Attack", "Smash"))
     warrior.lvl = 20
@@ -170,7 +170,7 @@ class char_test extends AnyFunSuite {
 
   test("attacks, aoe attacks, heals") {
     val warrior: Warrior = new Warrior()
-    val healer: Healer = new  Healer()
+    val healer: Healer = new Healer()
     val mage: Mage = new Mage()
     val party1: Party = new Party()
     val party2: Party = new Party()

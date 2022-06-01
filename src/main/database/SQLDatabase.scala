@@ -1,7 +1,6 @@
 package database
 
 import java.sql.{Connection, DriverManager, ResultSet}
-import scala.io.Source
 
 class SQLDatabase extends Database {
   val url = "jdbc:mysql://localhost:3306/users"

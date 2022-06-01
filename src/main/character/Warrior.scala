@@ -1,10 +1,8 @@
 package character
 
-import scala.collection.mutable.ListBuffer
-
-class Warrior (base_hp: Int =  130, base_mp: Int = 30, base_attack: Int = 18,
-               base_m_attack: Int = 11, base_def: Int = 13,
-               base_m_def: Int = 7) extends Character(base_hp, base_mp, base_attack, base_m_attack, base_def, base_m_def) {
+class Warrior(base_hp: Int = 130, base_mp: Int = 30, base_attack: Int = 18,
+              base_m_attack: Int = 11, base_def: Int = 13,
+              base_m_def: Int = 7) extends Character(base_hp, base_mp, base_attack, base_m_attack, base_def, base_m_def) {
 
   charType = "warrior"
 
@@ -21,20 +19,6 @@ class Warrior (base_hp: Int =  130, base_mp: Int = 30, base_attack: Int = 18,
       this.magic_power += this.lvl
       this.magic_def += this.lvl + 1
       this.lvl += 1
-    }
-  }
-
-  def smash(opponent: Character): Unit = {
-    if (this.current_hp > 15) {
-      opponent.take_physical_damage(35 + this.lvl * 2)
-      this.current_hp -= 15
-    }
-  }
-
-  def dark_slash(opponent: Character): Unit = {
-    if (this.lvl >= 5) {
-      magic_attack(opponent, 15, 40)
-      physical_attack(opponent)
     }
   }
 
@@ -59,6 +43,20 @@ class Warrior (base_hp: Int =  130, base_mp: Int = 30, base_attack: Int = 18,
     }
     if (option == "Dark Slash") {
       this.dark_slash(creature)
+    }
+  }
+
+  def smash(opponent: Character): Unit = {
+    if (this.current_hp > 15) {
+      opponent.take_physical_damage(35 + this.lvl * 2)
+      this.current_hp -= 15
+    }
+  }
+
+  def dark_slash(opponent: Character): Unit = {
+    if (this.lvl >= 5) {
+      magic_attack(opponent, 15, 40)
+      physical_attack(opponent)
     }
   }
 }

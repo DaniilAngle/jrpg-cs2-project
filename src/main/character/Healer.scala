@@ -1,6 +1,6 @@
 package character
 
-class Healer(base_hp: Int =  110, base_mp: Int = 150, base_attack: Int = 6,
+class Healer(base_hp: Int = 110, base_mp: Int = 150, base_attack: Int = 6,
              base_m_attack: Int = 22, base_def: Int = 2,
              base_m_def: Int = 20) extends Character(base_hp, base_mp, base_attack, base_m_attack, base_def, base_m_def) {
 
@@ -19,35 +19,6 @@ class Healer(base_hp: Int =  110, base_mp: Int = 150, base_attack: Int = 6,
       this.magic_power += this.lvl + 3
       this.magic_def += this.lvl + 2
       this.lvl += 1
-    }
-  }
-
-  def healing(creature: Character, healing: Int): Unit = {
-    if (creature.current_hp + healing <= creature.hp) {
-      creature.current_hp += healing
-    } else {
-      creature.current_hp = creature.hp
-    }
-  }
-  def heal(creature: Character): Unit = {
-    var heal: Int = 25 + this.lvl * 5
-    if (this.use_magic(25)) {
-      healing(creature, heal)
-    }
-  }
-  def holy_ray(opponent: Character): Unit = {
-    this.magic_attack(opponent, 40)
-  }
-
-  def all_heal(party: Party): Unit = {
-    if (this.lvl >= 15) {
-      var heal: Int = 100 + this.lvl * 2
-      if (this.use_magic(200))
-      for (member <- party.char_list) {
-        if (member.alive) {
-          healing(member, heal)
-        }
-      }
     }
   }
 
@@ -78,6 +49,37 @@ class Healer(base_hp: Int =  110, base_mp: Int = 150, base_attack: Int = 6,
     }
     if (option == "Heal Party") {
       this.all_heal(party)
+    }
+  }
+
+  def heal(creature: Character): Unit = {
+    var heal: Int = 25 + this.lvl * 5
+    if (this.use_magic(25)) {
+      healing(creature, heal)
+    }
+  }
+
+  def healing(creature: Character, healing: Int): Unit = {
+    if (creature.current_hp + healing <= creature.hp) {
+      creature.current_hp += healing
+    } else {
+      creature.current_hp = creature.hp
+    }
+  }
+
+  def holy_ray(opponent: Character): Unit = {
+    this.magic_attack(opponent, 40)
+  }
+
+  def all_heal(party: Party): Unit = {
+    if (this.lvl >= 15) {
+      var heal: Int = 100 + this.lvl * 2
+      if (this.use_magic(200))
+        for (member <- party.char_list) {
+          if (member.alive) {
+            healing(member, heal)
+          }
+        }
     }
   }
 }

@@ -3,13 +3,13 @@ package model
 import akka.actor.{Actor, ActorRef}
 import character.{Character, Healer, Mage, Party, Warrior}
 import messages._
-import play.api.libs.json.Json.{toJson, using}
+import play.api.libs.json.Json.toJson
 import play.api.libs.json._
 
 import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
-class BattleSystem(server: ActorRef, database: ActorRef) extends Actor{
+class BattleSystem(server: ActorRef, database: ActorRef) extends Actor {
 
   var usernameToParty: Map[String, Party] = Map()
   var usernameToEnemyUsername: Map[String, String] = Map.empty
@@ -36,7 +36,7 @@ class BattleSystem(server: ActorRef, database: ActorRef) extends Actor{
     case turnAction: TurnAction =>
       var enemyHpChange: Int = usernameToCharNamesToChar(turnAction.enemyUsername)(turnAction.enemyName).current_hp
       usernameToCharNamesToChar(turnAction.username)(turnAction.heroName).takeAction(turnAction.option,
-        usernameToCharNamesToChar(turnAction.enemyUsername)(turnAction.enemyName),usernameToParty(turnAction.enemyUsername))
+        usernameToCharNamesToChar(turnAction.enemyUsername)(turnAction.enemyName), usernameToParty(turnAction.enemyUsername))
       enemyHpChange -= usernameToCharNamesToChar(turnAction.enemyUsername)(turnAction.enemyName).current_hp
       server ! TurnResult(turnAction.username, usernameToEnemyUsername(turnAction.username), turnAction.heroName, turnAction.enemyName, enemyHpChange)
 
@@ -46,7 +46,7 @@ class BattleSystem(server: ActorRef, database: ActorRef) extends Actor{
       server ! UpdateGameState(nextPlayerUsername, battlePartyJSONCreator(nextPlayerUsername, turnAction.username))
 
       val battleID: String = usernameToBattleID(turnAction.username)
-      val nextChar: List[String] = turnSelect(battleIDToUsernames(battleID).head , battleIDToUsernames(battleID).last, usernameToCharNamesToChar(turnAction.username)(turnAction.heroName))
+      val nextChar: List[String] = turnSelect(battleIDToUsernames(battleID).head, battleIDToUsernames(battleID).last, usernameToCharNamesToChar(turnAction.username)(turnAction.heroName))
       if (nextChar.isEmpty) {
         usernameToParty(turnAction.username).battle_end(usernameToParty(turnAction.enemyUsername))
         server ! BattleEnded(turnAction.username, turnAction.enemyUsername)
@@ -66,8 +66,8 @@ class BattleSystem(server: ActorRef, database: ActorRef) extends Actor{
 
     case RemoveParty(username) =>
       database ! SaveGame(username, gameStateForDBParser(username))
-        usernameToParty -= username
-        usernameToCharNamesToChar -= username
+      usernameToParty -= username
+      usernameToCharNamesToChar -= username
 
     case createNewParty: CreateNewParty =>
       newPartyCreatorForDB(createNewParty.username, createNewParty.charTypes, createNewParty.charNames)
@@ -75,7 +75,7 @@ class BattleSystem(server: ActorRef, database: ActorRef) extends Actor{
 
   }
 
-  def newPartyCreatorForDB(username: String ,types: List[String], names: List[String]): Party = {
+  def newPartyCreatorForDB(username: String, types: List[String], names: List[String]): Party = {
     val party: Party = new Party()
     var charNameToChar: Map[String, Character] = Map.empty
     for (i <- types.indices) {
@@ -101,20 +101,20 @@ class BattleSystem(server: ActorRef, database: ActorRef) extends Actor{
     var charNameToIdx: Map[String, Int] = Map.empty
     for (i <- 0 to 2) {
       val parsedParty: JsValue = Json.parse(partyJSON)
-      val charName: String = (parsedParty \ "characters" \ i \"name" ).as[String]
-      val charType: String = (parsedParty \ "characters" \ i \"type" ).as[String]
-      val charLvl: Int = (parsedParty \ "characters" \ i \"lvl" ).as[Int]
-      val charCurrentMP: Int = (parsedParty \ "characters"\ i \ "currentHP" ).as[Int]
-      val charCurrentHP: Int = (parsedParty \ "characters"\ i \ "currentMP" ).as[Int]
-      val charExp: Int = (parsedParty \ "characters" \ i \"currentMP" ).as[Int]
-      val charAlive: Boolean = (parsedParty \ "characters"\ i \ "alive").as[Boolean]
-      val charMaxHP: Int = (parsedParty \ "characters"\ i \ "maxHP" ).as[Int]
-      val charMaxMP: Int = (parsedParty \ "characters"\ i \ "maxMP" ).as[Int]
-      val charDef: Int = (parsedParty \ "characters"\ i \ "defense" ).as[Int]
-      val charMagDef: Int = (parsedParty \ "characters"\ i \ "magDefense" ).as[Int]
-      val charLvlUpExp: Int = (parsedParty \ "characters"\ i \ "charLvlUpExp" ).as[Int]
-      val charAttackPower: Int = (parsedParty \ "characters"\ i \ "attackPower" ).as[Int]
-      val charMagAttackPower: Int = (parsedParty \ "characters"\ i \ "magAttackPower" ).as[Int]
+      val charName: String = (parsedParty \ "characters" \ i \ "name").as[String]
+      val charType: String = (parsedParty \ "characters" \ i \ "type").as[String]
+      val charLvl: Int = (parsedParty \ "characters" \ i \ "lvl").as[Int]
+      val charCurrentMP: Int = (parsedParty \ "characters" \ i \ "currentHP").as[Int]
+      val charCurrentHP: Int = (parsedParty \ "characters" \ i \ "currentMP").as[Int]
+      val charExp: Int = (parsedParty \ "characters" \ i \ "currentMP").as[Int]
+      val charAlive: Boolean = (parsedParty \ "characters" \ i \ "alive").as[Boolean]
+      val charMaxHP: Int = (parsedParty \ "characters" \ i \ "maxHP").as[Int]
+      val charMaxMP: Int = (parsedParty \ "characters" \ i \ "maxMP").as[Int]
+      val charDef: Int = (parsedParty \ "characters" \ i \ "defense").as[Int]
+      val charMagDef: Int = (parsedParty \ "characters" \ i \ "magDefense").as[Int]
+      val charLvlUpExp: Int = (parsedParty \ "characters" \ i \ "charLvlUpExp").as[Int]
+      val charAttackPower: Int = (parsedParty \ "characters" \ i \ "attackPower").as[Int]
+      val charMagAttackPower: Int = (parsedParty \ "characters" \ i \ "magAttackPower").as[Int]
 
       val char: Character = classMatcher(charType)
 
@@ -151,20 +151,20 @@ class BattleSystem(server: ActorRef, database: ActorRef) extends Actor{
     val party: Party = usernameToParty(username)
     var listOfChars: List[JsValue] = List.empty
     for (char <- party.char_list) {
-      var name: String = char.name
-      var charType: String = char.charType
-      var charExp: Int = char.exp
-      var charMaxHP: Int = char.hp
-      var charMaxMP: Int = char.magic
-      var charCurHP: Int = char.current_hp
-      var charCurMP: Int = char.current_magic
-      var charLvl: Int = char.lvl
-      var charAlive: Boolean = char.alive
-      var charArmor: Int = char.armor
-      var charMag_Def: Int = char.magic_def
-      var charMagPower: Int = char.magic_power
-      var charLvlUpExp: Int = char.lvl_up_exp
-      var charAttackPower: Int = char.attack_power
+      val name: String = char.name
+      val charType: String = char.charType
+      val charExp: Int = char.exp
+      val charMaxHP: Int = char.hp
+      val charMaxMP: Int = char.magic
+      val charCurHP: Int = char.current_hp
+      val charCurMP: Int = char.current_magic
+      val charLvl: Int = char.lvl
+      val charAlive: Boolean = char.alive
+      val charArmor: Int = char.armor
+      val charMag_Def: Int = char.magic_def
+      val charMagPower: Int = char.magic_power
+      val charLvlUpExp: Int = char.lvl_up_exp
+      val charAttackPower: Int = char.attack_power
 
       val charInJson: JsValue = JsObject(Map(
         "name" -> JsString(name),
@@ -191,6 +191,7 @@ class BattleSystem(server: ActorRef, database: ActorRef) extends Actor{
     )))
     jsonBack
   }
+
   def deadCheck(listOfChars: ListBuffer[Character], index: Int = 0, deadCount: Int = 0): String = {
     if (!listOfChars(index).alive) {
       if (deadCount == 3) {
@@ -216,7 +217,7 @@ class BattleSystem(server: ActorRef, database: ActorRef) extends Actor{
       return List()
     }
 
-    var moveOrderList: ListBuffer[Character] = ListBuffer.empty
+    val moveOrderList: ListBuffer[Character] = ListBuffer.empty
     for (i <- 0 to 2) {
       moveOrderList += party1char(i)
       moveOrderList += party2char(i)
@@ -252,21 +253,21 @@ class BattleSystem(server: ActorRef, database: ActorRef) extends Actor{
         "enemyParty" -> JsObject(Map(
           "characters" -> toJson(jsonEnemy)
         ))
-    ))
+      ))
     Json.stringify(battlePartyDataJSON)
   }
 
   def JSONPartyClient(user: String): List[JsValue] = {
-    var party: Party = usernameToParty(user)
+    val party: Party = usernameToParty(user)
     var listOfChars: List[JsValue] = List.empty
     for (creature <- party.char_list) {
-      var name: String = creature.name
-      var charType: String = creature.charType
-      var charCurHP: Int = creature.current_hp
-      var charCurMP: Int = creature.current_magic
-      var charMaxHP: Int = creature.hp
-      var charMaxMP: Int = creature.magic
-      var battleOptions: List[String] = creature.battleOptions()
+      val name: String = creature.name
+      val charType: String = creature.charType
+      val charCurHP: Int = creature.current_hp
+      val charCurMP: Int = creature.current_magic
+      val charMaxHP: Int = creature.hp
+      val charMaxMP: Int = creature.magic
+      val battleOptions: List[String] = creature.battleOptions()
       val charInJson: JsValue = JsObject(Map(
         "name" -> JsString(name),
         "type" -> JsString(charType),

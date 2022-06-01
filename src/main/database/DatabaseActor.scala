@@ -1,10 +1,9 @@
 package database
 
 import akka.actor.Actor
-import akka.dispatch.sysmsg.Recreate
 import messages._
 
-class DatabaseActor extends Actor{
+class DatabaseActor extends Actor {
 
   val database: Database = new SQLDatabase()
 
@@ -12,13 +11,13 @@ class DatabaseActor extends Actor{
     case CheckCredentials(username, password, server) =>
       if (database.playerExists(username, password)) {
         println("success login " + username)
-        sender() ! LoginResult(username,result = true, server)
+        sender() ! LoginResult(username, result = true, server)
       } else {
         println("failed to login " + username)
-        sender() ! LoginResult(username,result = false, server)
+        sender() ! LoginResult(username, result = false, server)
       }
     case RegisterCheck(username, password, server) =>
-      if (database.usernameExists(username))  {
+      if (database.usernameExists(username)) {
         println("reg unsuccessful " + username)
         sender() ! RegisterResult(username, registered = false, server)
       } else {
